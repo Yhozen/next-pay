@@ -15,12 +15,13 @@
   },
   "devDependencies": {
     "@swc/core": "^1.3.23",
-    "eslint-config-custom": "*",
+    "eslint-config-drimo": "*",
     "tsconfig": "*",
     "tsup": "^6.7.0",
     "typescript": "5.0"
   },
   "dependencies": {
     "next-pay-core": "*"
-  }
+  },
+  "openSource": true
 }
