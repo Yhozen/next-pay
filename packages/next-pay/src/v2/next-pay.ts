@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { NextPayIntegration, PayCore, type Options } from 'next-pay-core'
 import { getBody, getURL, setHeaders } from './http.helpers'
