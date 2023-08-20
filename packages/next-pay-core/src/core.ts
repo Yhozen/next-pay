@@ -19,7 +19,7 @@ type SupportedCurrenciesForIntegrations<
 > = ValueOf<Integrations>['supportedCurrencies'][number]
 
 export type Options = {
-  integrations: typeof NextPayIntegration[]
+  integrations: (typeof NextPayIntegration)[]
   basePath?: string
   integrationConfig?: IntegrationConfig
 }

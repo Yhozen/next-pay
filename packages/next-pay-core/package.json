@@ -21,13 +21,13 @@
     "@types/cookie": "^0.5.1",
     "@types/mercadopago": "^1.5.8",
     "eslint-config-drimo": "*",
-    "route-trie": "^3.0.0",
     "tsconfig": "*",
     "tsup": "^6.7.0",
     "typescript": "5.0"
   },
   "dependencies": {
-    "@meanie/mongoose-to-json": "^2.6.0"
+    "@meanie/mongoose-to-json": "^2.6.0",
+    "route-trie": "^3.0.0"
   },
   "openSource": true
 }

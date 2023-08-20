@@ -28,7 +28,9 @@ class PayscriptNode extends TrieNode {
 }
 
 export class PayscriptTrie extends Trie {
-  define!: (pattern: string) => PayscriptNode
+  define(pattern: string): PayscriptNode {
+    return super.define(pattern) as PayscriptNode
+  }
 }
 
 export const isHandler = (handler: unknown): handler is PayscriptHandler => {
