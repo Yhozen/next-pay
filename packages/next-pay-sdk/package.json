@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "next-pay-sdk",
+  "version": "0.0.1",
+  "index": "dist/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "peerDependencies": {
+    "axios": "^0.27.2"
+  },
+  "devDependencies": {
+    "@types/express": "4.17.15",
+    "eslint-config-drimo": "*",
+    "next-pay-core": "*",
+    "tsconfig": "*",
+    "tsup": "^6.7.0",
+    "typescript": "5.0"
+  },
+  "dependencies": {},
+  "openSource": true
+}

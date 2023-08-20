@@ -1,31 +1,31 @@
 {
-  "name": "gise",
-  "version": "0.1.0",
+  "name": "nextpay-monorepo",
+  "version": "0.0.0",
   "private": true,
-  "dependencies": {
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1"
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"*/.{ts,tsx,md}\"",
+    "oss": "npx ts-node opensource.ts"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "devDependencies": {
+    "eslint-config-drimo": "*",
+    "prettier": "latest",
+    "turbo": "latest",
+    "typescript": "5.0"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {},
+  "packageManager": "yarn@1.22.19",
+  "volta": {
+    "node": "18.12.0",
+    "yarn": "1.22.19"
   }
 }

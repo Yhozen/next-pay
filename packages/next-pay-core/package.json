@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "name": "next-pay-core",
+  "version": "0.0.1",
+  "index": "dist/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "peerDependencies": {
+    "@typegoose/typegoose": "^9.12.1",
+    "axios": "^0.27.2",
+    "mongoose": "^6.6.5",
+    "typedi": "^0.10.0",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.3.23",
+    "eslint-config-drimo": "*",
+    "@types/mercadopago": "^1.5.8",
+    "tsconfig": "*",
+    "route-trie": "^3.0.0",
+    "typescript": "5.0",
+    "tsup": "^6.7.0"
+  },
+  "dependencies": {
+    "@meanie/mongoose-to-json": "^2.6.0"
+  },
+  "openSource": true
+}
