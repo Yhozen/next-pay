@@ -1,7 +1,7 @@
 "use client";
 import type { SupportedCurrencies } from "next-pay-sdk";
 import useSWR from "swr";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { sdk } from "@/helpers/next-pay.sdk";
 import { serviceAtom } from "./serviceAtom";
@@ -14,7 +14,7 @@ export const SelectProvider = ({
   const { data, error } = useSWR(`supported_services/${currency}`, () =>
     sdk.getSupportedProviderForCurrency(currency)
   );
-  const [, setService] = useAtom(serviceAtom);
+  const setService = useSetAtom(serviceAtom);
   const isLoading = !data && !error;
 
   useEffect(() => {
