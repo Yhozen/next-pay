@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { serviceAtom } from "./serviceAtom";
 import { SelectProvider } from "./service-selector";
+import { Button } from "./ui/button";
 
 export const CreatePayment = () => {
   const { data, error } = useSWR(
@@ -65,9 +66,7 @@ export const CreatePayment = () => {
         value={amount}
         onChange={(e) => setAmount(Number(e.target.value))}
       />
-      <button style={{ width: "100%" }} onClick={onClick}>
-        Pay 🤑
-      </button>
+      <Button onClick={onClick}>Pay 🤑</Button>
       {link && (
         <a href={link} target="_blank" rel="noreferrer">
           ir pago
