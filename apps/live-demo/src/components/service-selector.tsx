@@ -5,6 +5,13 @@ import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { sdk } from "@/helpers/next-pay.sdk";
 import { serviceAtom } from "./serviceAtom";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const SelectProvider = ({
   currency,
@@ -28,10 +35,17 @@ export const SelectProvider = ({
   if (!data) return <p>no data</p>;
 
   return (
-    <select onChange={(e) => setService(e.target.value)}>
-      {data.map((currency) => (
-        <option key={currency}>{currency}</option>
-      ))}
-    </select>
+    <Select onValueChange={setService}>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Provider" />
+      </SelectTrigger>
+      <SelectContent>
+        {data.map((provider) => (
+          <SelectItem value={provider} key={provider}>
+            {provider}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 };
