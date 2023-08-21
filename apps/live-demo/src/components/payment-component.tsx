@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { serviceAtom } from "./serviceAtom";
 import { SelectProvider } from "./service-selector";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 export const CreatePayment = () => {
   const { data, error } = useSWR(
@@ -61,7 +62,7 @@ export const CreatePayment = () => {
         </select>
       )}
       {selectedCurrency && <SelectProvider currency={selectedCurrency} />}
-      <input
+      <Input
         type="number"
         value={amount}
         onChange={(e) => setAmount(Number(e.target.value))}
