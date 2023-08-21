@@ -6,8 +6,16 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { serviceAtom } from "./serviceAtom";
 import { SelectProvider } from "./service-selector";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const CreatePayment = () => {
   const { data, error } = useSWR(
@@ -51,15 +59,22 @@ export const CreatePayment = () => {
       {!data ? (
         <p>loading...</p>
       ) : (
-        <select
-          onChange={(e) =>
-            setSelectedCurrency(e.target.value as SupportedCurrencies)
+        <Select
+          onValueChange={(value) =>
+            setSelectedCurrency(value as SupportedCurrencies)
           }
         >
-          {data.map((currency) => (
-            <option key={currency}>{currency}</option>
-          ))}
-        </select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Currency" />
+          </SelectTrigger>
+          <SelectContent>
+            {data.map((currency) => (
+              <SelectItem value={currency} key={currency}>
+                {currency}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       )}
       {selectedCurrency && <SelectProvider currency={selectedCurrency} />}
       <Input
