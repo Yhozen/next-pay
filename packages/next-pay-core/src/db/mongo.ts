@@ -1,7 +1,6 @@
-import toJson from '@meanie/mongoose-to-json'
 import mongoose, { Connection } from 'mongoose'
 
-mongoose.plugin(toJson)
+mongoose.plugin(require('@meanie/mongoose-to-json'))
 
 type GlobalWithMongoose = typeof globalThis & {
   mongoose: {
@@ -25,6 +24,7 @@ if (!cached)
   }
 
 async function dbConnect(mongoDBUri?: string) {
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
   const uri = mongoDBUri ?? process.env.MONGODB_URI
   if (!uri) throw new Error('no MONGODB_URI')
   if (cached.conn) return cached.conn

@@ -1,10 +1,11 @@
 import { Service } from 'typedi'
 
-import { NextPayIntegration } from '../base.integration'
-import { NextPayOrderStatus } from '../../types/pay-order-status.type'
 import { SupportedCurrencies } from '../../constants/supported-currencies'
-import { FintocIntegrationConfig } from './config'
 import { getValueFrom } from '../../helpers/integration.helpers'
+import { NextPayOrderStatus } from '../../types/pay-order-status.type'
+import { NextPayIntegration } from '../base.integration'
+
+import { FintocIntegrationConfig } from './config'
 import * as fintocService from './service'
 
 @Service()

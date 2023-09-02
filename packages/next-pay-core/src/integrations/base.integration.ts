@@ -1,13 +1,12 @@
 import Container, { Inject, Service, Token } from 'typedi'
 import { z } from 'zod'
 
-import { DataService } from '../services/data.service'
-import { NextPayOrderStatus } from '../types/pay-order-status.type'
-import { Logger } from '../services/logger.service'
-// import { PaymentRequest } from './PaymentRequest'
 import type { SupportedCurrenciesType } from '../constants/supported-currencies'
-import type { RequestInternal } from '../types/internal.types'
+import { Data } from '../services/data.service'
 import { IntegrationConfig } from '../services/integration-config.service'
+import { Logger } from '../services/logger.service'
+import type { RequestInternal } from '../types/internal.types'
+import { NextPayOrderStatus } from '../types/pay-order-status.type'
 
 const nameSchema = z
   .string()
@@ -36,7 +35,7 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
   abstract readonly supportedCurrencies: readonly SupportedCurrenciesType[]
 
   @Inject()
-  private readonly dataService!: DataService
+  private readonly dataService!: Data
   @Inject()
   private readonly logService!: Logger
   @Inject()
@@ -112,19 +111,21 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
     name?: string,
   ) {
     return await this.dataService.startTransaction(async session => {
-      const order = await this.dataService.createOrder({
-        serviceName: this.getName(),
-        externalId: 'not_set',
-        clientName: name,
-        referenceId,
-        currency,
-        amount,
+      const order = await this.dataService.createOrder(
+        {
+          serviceName: this.getName(),
+          externalId: 'not_set',
+          clientName: name,
+          referenceId,
+          currency,
+          amount,
+        },
         session,
-      })
+      )
 
       if (!order) throw new Error(`couldn't save order`)
 
-      const docId = order._id.toString()
+      const docId = order.id.toString()
       const payment = await this.createPaymentRequest(
         amount,
         docId,
