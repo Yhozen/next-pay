@@ -1,11 +1,11 @@
 import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose'
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
-import { NextPayOrderStatus } from '../types/pay-order-status.type'
 import {
-  SupportedCurrencies,
   type SupportedCurrenciesType,
+  SupportedCurrencies,
 } from '../constants/supported-currencies'
+import { NextPayOrderStatus } from '../types/pay-order-status.type'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface OrderClass extends Base {} // have the interface to add the types of "Base" to the class

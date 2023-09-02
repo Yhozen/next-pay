@@ -1,7 +1,5 @@
 import mongoose from 'mongoose'
 
-import dbConnect from './mongo'
-
 export type ClientSession = mongoose.ClientSession
 
 async function _withTransaction(
@@ -9,8 +7,6 @@ async function _withTransaction(
   fn: (session: ClientSession) => Promise<any>,
   existingSession?: ClientSession,
 ): Promise<void> {
-  await dbConnect()
-
   if (existingSession) {
     if (existingSession.inTransaction()) return fn(existingSession)
 

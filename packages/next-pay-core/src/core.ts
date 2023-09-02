@@ -1,13 +1,14 @@
 import Container from 'typedi'
 
+import { IntegrationsObjectBase } from './constants/integration-object-default'
+import type { SupportedCurrenciesType } from './constants/supported-currencies'
 import { PayscriptTrie } from './helpers/routing.helpers'
 import { NextPayIntegration } from './integrations/base.integration'
-import { addIntegrationRoutesTrie } from './routes/integration-routes'
-import type { SupportedCurrenciesType } from './constants/supported-currencies'
-import { IntegrationsObjectBase } from './constants/integration-object-default'
 import { addGeneralRoutesTrie } from './routes/general-routes'
-import { processRequest } from './processRequest'
+import { addIntegrationRoutesTrie } from './routes/integration-routes'
+import { Data, DataService } from './services/data.service'
 import { IntegrationConfig } from './services/integration-config.service'
+import { processRequest } from './processRequest'
 
 type ValueOf<
   ObjectType,
@@ -22,6 +23,7 @@ export type Options = {
   integrations: (typeof NextPayIntegration)[]
   basePath?: string
   integrationConfig?: IntegrationConfig
+  adapter: DataService
 }
 
 export class PayCore<Integrations extends IntegrationsObjectBase> {
@@ -35,6 +37,7 @@ export class PayCore<Integrations extends IntegrationsObjectBase> {
 
   constructor(private readonly options: Options) {
     const integrationConfig = options.integrationConfig
+    Container.set(Data, options.adapter.create())
 
     if (integrationConfig) {
       Container.set(IntegrationConfig, integrationConfig)

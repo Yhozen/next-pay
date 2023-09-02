@@ -1,84 +1,73 @@
 import { FilterQuery, UpdateQuery } from 'mongoose'
-import { Service } from 'typedi'
+import Container, { Service, Token } from 'typedi'
 
-import dbConnect from '../db/mongo'
-import {
-  ClientSession,
-  withTransaction,
-  WithTransactionCallback,
-} from '../db/withTransaction'
-import { OrderClass, OrderModel } from '../models/order.model'
-
-import { PaymentRequest } from '../types/payment-request.type'
-import { PreMethodsHook } from '../decorators/pre-methods-hook.decorator'
 import { SupportedCurrenciesType } from '../constants/supported-currencies'
-
-async function preDataService() {
-  await dbConnect()
-}
-
-type CreateOrderParams = {
+import type { NextPayOrderStatus } from '../types/pay-order-status.type'
+export type CreateOrderParams = {
   serviceName: string
   externalId: string
   currency: SupportedCurrenciesType
   referenceId: string
   amount: string
   clientName?: string
-  session?: ClientSession
 }
 
-@PreMethodsHook(() => preDataService())
+export class Order {
+  public id!: string
+  public externalId!: string
+  public serviceName!: string
+  public currency!: SupportedCurrenciesType
+  public amount!: string
+  public status!: NextPayOrderStatus
+  public clientName?: string
+  public referenceId!: string
+}
+
+export type WithTransactionCallback<T, Ctx> = (ctx: Ctx) => Promise<T>
+
+type PlaceholderCTX = { __type: 'PlaceholderCTX' }
+
 @Service()
-export class DataService {
-  async startTransaction<T>(callback: WithTransactionCallback<T>) {
-    return withTransaction(callback)
+export abstract class Data<CTX = PlaceholderCTX> {
+  public abstract callWithCtx<T>(
+    callback: WithTransactionCallback<T, CTX>,
+  ): Promise<T>
+  async startTransaction<T>(
+    callback: WithTransactionCallback<T, CTX>,
+  ): Promise<T> {
+    return this.callWithCtx(callback)
   }
 
-  async createOther(paymentRequest: PaymentRequest) {
-    console.log({ paymentRequest })
+  static create() {
+    return Container.get(this as Token<Data<any>>)
   }
 
-  // eslint-disable-next-line max-params
-  async createOrder({
-    serviceName,
-    externalId,
-    currency,
-    clientName,
-    referenceId,
-    session,
-    amount,
-  }: CreateOrderParams) {
-    const [order] = await OrderModel.create(
-      [{ externalId, serviceName, currency, clientName, referenceId, amount }],
-      {
-        session,
-      },
-    )
+  async createOrder(value: CreateOrderParams, ctx: CTX): Promise<Order> {
+    throw new Error('you must implement createOrder')
 
-    return order
+    return {} as Order
   }
 
   async updateOrder(
-    find: FilterQuery<OrderClass>,
-    update: UpdateQuery<OrderClass>,
-    session?: ClientSession,
-  ) {
-    const order = await OrderModel.findOneAndUpdate(find, update, {
-      session,
-    }).lean()
+    find: FilterQuery<Order>,
+    update: UpdateQuery<Order>,
+    ctx?: CTX,
+  ): Promise<Order> {
+    throw new Error('you must implement createOrder')
 
-    return order
+    return {} as Order
   }
 
-  async getOrderByExternalId(externalId: string) {
-    const order = await OrderModel.findOne({ externalId }).lean()
+  async getOrderByExternalId(value: string): Promise<Order | null> {
+    throw new Error('you must implement getOrderByExternalId')
 
-    return order
+    return {} as Order
   }
+  async getOrderById(value: string): Promise<Order | null> {
+    throw new Error('you must implement getOrderByExternalId')
 
-  async getOrderById(id: string) {
-    const order = await OrderModel.findOne({ _id: id }).lean()
-
-    return order
+    return {} as Order
   }
 }
+
+export type DataService = typeof Data<any>

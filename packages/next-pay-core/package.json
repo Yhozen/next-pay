@@ -10,9 +10,9 @@
     "dev": "tsup --watch"
   },
   "peerDependencies": {
-    "@typegoose/typegoose": "^9.12.1",
+    "@typegoose/typegoose": "^11.5.0",
     "axios": "^0.27.2",
-    "mongoose": "^6.6.5",
+    "mongoose": "^7.5.0",
     "typedi": "^0.10.0",
     "zod": "^3.21.4"
   },
@@ -22,8 +22,8 @@
     "@types/mercadopago": "^1.5.8",
     "eslint-config-drimo": "*",
     "tsconfig": "*",
-    "tsup": "^6.7.0",
-    "typescript": "5.0"
+    "typescript": "5.2.2",
+    "tsup": "^6.7.0"
   },
   "dependencies": {
     "@meanie/mongoose-to-json": "^2.6.0",

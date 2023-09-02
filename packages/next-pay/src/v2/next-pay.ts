@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { type Options, NextPayIntegration, PayCore } from 'next-pay-core'
 
-import { NextPayIntegration, PayCore, type Options } from 'next-pay-core'
-import { getBody, getURL, setHeaders } from './http.helpers'
 import { getBasePath } from './get-base-path'
+import { getBody, getURL, setHeaders } from './http.helpers'
 import {
-  IntegrationsAsObject,
   integrationArrayToObject,
+  IntegrationsAsObject,
 } from './integrations-parser'
 import type { NamedIntegration } from './named-integration.type'
 
@@ -57,6 +57,7 @@ export class NextPay<Integrations extends IntegrationsBase> {
       integrations,
       basePath: options.basePath,
       integrationConfig: options.integrationConfig,
+      adapter: options.adapter,
     })
     // like the good old days :')
     this.handler = this.handler.bind(this)
@@ -77,6 +78,7 @@ type NextPayOptions<Integrations> = {
   basePath?: string
   name: string
   integrationConfig?: Options['integrationConfig']
+  adapter: Options['adapter']
 }
 
 type NextPayOptionsInput<
@@ -86,6 +88,7 @@ type NextPayOptionsInput<
   basePath?: string
   name: string
   integrationConfig?: Options['integrationConfig']
+  adapter: Options['adapter']
 }
 
 export const defineNextPayConfig = <
@@ -105,6 +108,8 @@ export const defineNextPayConfig = <
   }
   return { basePath, ...config, integrations }
 }
+
+export { NextApiRequest, NextApiResponse }
 
 export type InferIntegrationType<T> = T extends NextPayOptions<infer U>
   ? U

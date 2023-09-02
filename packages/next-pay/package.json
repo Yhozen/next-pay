@@ -20,7 +20,7 @@
     "next": "13.3.0",
     "tsconfig": "*",
     "tsup": "^6.7.0",
-    "typescript": "5.0"
+    "typescript": "5.2.2"
   },
   "dependencies": {
     "next-pay-core": "*"
