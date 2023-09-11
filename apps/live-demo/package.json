@@ -37,5 +37,6 @@
     "typedi": "^0.10.0",
     "typescript": "5.1.6",
     "zod": "3.21.4"
-  }
+  },
+  "openSource": true
 }

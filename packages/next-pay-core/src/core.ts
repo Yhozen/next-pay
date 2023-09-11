@@ -62,7 +62,7 @@ export class PayCore<Integrations extends IntegrationsObjectBase> {
     const promises = this.integrations.map(async integration => {
       const integrationInstance = await integration.create()
 
-      this.addIntegration(integrationInstance)
+      await this.addIntegration(integrationInstance)
 
       integrationInstance.supportedCurrencies.forEach(currency =>
         this.addSupportedCurrencyByIntegration(
@@ -80,7 +80,7 @@ export class PayCore<Integrations extends IntegrationsObjectBase> {
     this.printSupportedCurrencies()
   }
 
-  private addIntegration(integration: NextPayIntegration) {
+  private async addIntegration(integration: NextPayIntegration) {
     integration.log('Integrating...')
 
     return addIntegrationRoutesTrie(this.trie, integration)
