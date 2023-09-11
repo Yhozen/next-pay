@@ -4,7 +4,11 @@ import {
   InferIntegrationType,
   NextPay,
 } from "next-pay";
-import { createMercadoPagoIntegration } from "next-pay-core";
+import {
+  createMercadoPagoIntegration,
+  mongoAdapter,
+  connectMongo,
+} from "next-pay-core";
 
 const MercadoPagoIntegration = createMercadoPagoIntegration({
   async accessToken(): Promise<string> {
@@ -22,6 +26,7 @@ const integrations = createIntegrations().add(MercadoPagoIntegration).compile();
 const nextPayConfig = defineNextPayConfig({
   integrations,
   name: "live-demo",
+  adapter: mongoAdapter({ connection: connectMongo }),
   integrationConfig: {
     async onApproved(integrationName, order) {
       const invoiceId = order?.referenceId;
