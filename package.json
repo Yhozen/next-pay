@@ -16,7 +16,7 @@
   "devDependencies": {
     "eslint-config-drimo": "*",
     "prettier": "latest",
-    "turbo": "1.10.12",
+    "turbo": "^1.10.13",
     "typescript": "5.0"
   },
   "engines": {
