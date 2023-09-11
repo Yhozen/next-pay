@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "name": "next-pay",
+  "version": "0.0.1",
+  "index": "dist/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "^0.1.13",
+    "next": "^12.2.5 || ^13",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.3.23",
+    "eslint-config-drimo": "*",
+    "next": "13.3.0",
+    "tsconfig": "*",
+    "tsup": "^6.7.0",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "next-pay-core": "*"
+  },
+  "openSource": true
+}
