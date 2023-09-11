@@ -1,4 +1,8 @@
+import { HTTPMethod, PayscriptHandler } from 'helpers/routing.helpers'
+import { validateSchema } from 'helpers/validation.helpers'
+import { Readable } from 'stream'
 import { Service } from 'typedi'
+import { z } from 'zod'
 
 import { SupportedCurrencies } from '../../constants/supported-currencies'
 import { getValueFrom } from '../../helpers/integration.helpers'
@@ -34,7 +38,12 @@ export class FintocIntegration extends NextPayIntegration {
     return { status }
   }
 
-  async createPaymentRequest(amount: string, orderId: string, name?: string) {
+  async createPaymentRequest(
+    amount: string,
+    orderId: string,
+    referenceId: string,
+    name?: string,
+  ) {
     const secretKey = await this.getAccessToken(name)
 
     const payment = await fintocService.createPayment({
@@ -54,6 +63,52 @@ export class FintocIntegration extends NextPayIntegration {
     this.log(req)
 
     return { id: '', name: '' }
+  }
+
+  async getInternalRoutes(name?: string) {
+    const routes = {
+      'widgets/:id': {
+        handler: ({ params }) => {
+          const { success, data, error } = validateSchema(
+            z.object({ id: z.string() }),
+            params,
+          )
+          if (!success)
+            return {
+              body: { error },
+              headers: { 'Content-Type': 'application/json' },
+            }
+
+          const body = new Readable()
+          body.push(`<!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="UTF-8" />
+              <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Document</title>
+            </head>
+            <body>
+              <p>example ${data.id}</p>
+            </body>
+          </html>
+          `)
+          body.push(null)
+
+          return {
+            body,
+            headers: {
+              'Content-Type': 'text/html',
+            },
+          }
+        },
+        method: HTTPMethod.GET,
+      },
+    } as const satisfies Record<
+      string,
+      { handler: PayscriptHandler; method: HTTPMethod }
+    >
+    return routes
   }
 
   protected getFintocLink(name?: string) {
