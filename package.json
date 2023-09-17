@@ -14,7 +14,7 @@
     "oss": "npx ts-node opensource.ts"
   },
   "devDependencies": {
-    "eslint-config-drimo": "workspace:*",
+    "eslint-config-drimo": "*",
     "prettier": "latest",
     "turbo": "^1.10.13",
     "typescript": "5.0"
