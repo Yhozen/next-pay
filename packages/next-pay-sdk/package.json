@@ -14,9 +14,9 @@
   },
   "devDependencies": {
     "@types/express": "4.17.15",
-    "eslint-config-drimo": "*",
-    "next-pay-core": "*",
-    "tsconfig": "*",
+    "eslint-config-drimo": "workspace:*",
+    "next-pay-core": "workspace:*",
+    "tsconfig": "workspace:*",
     "tsup": "^6.7.0",
     "typescript": "5.2.2"
   },
