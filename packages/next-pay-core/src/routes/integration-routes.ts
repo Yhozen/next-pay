@@ -32,7 +32,6 @@ export const addIntegrationRoutesTrie = async (
       const body = data
 
       const { amount, currency, name, referenceId } = body
-      console.log({ name })
 
       const order = await integration.createOrder(
         amount as string,
