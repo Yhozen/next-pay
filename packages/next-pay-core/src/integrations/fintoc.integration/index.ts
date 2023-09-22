@@ -1,7 +1,7 @@
 import { HTTPMethod, PayscriptHandler } from 'helpers/routing.helpers'
 import { validateSchema } from 'helpers/validation.helpers'
 import { Readable } from 'stream'
-import { Service } from 'typedi'
+import Container, { Inject, Service } from 'typedi'
 import { z } from 'zod'
 
 import { SupportedCurrencies } from '../../constants/supported-currencies'
@@ -10,7 +10,8 @@ import { NextPayOrderStatus } from '../../types/pay-order-status.type'
 import { NextPayIntegration } from '../base.integration'
 
 import { FintocIntegrationConfig } from './config'
-import * as fintocService from './service'
+import { FintocService } from './service'
+import { BASE_PATH_TOKEN } from 'constants/tokens'
 
 @Service()
 export class FintocIntegration extends NextPayIntegration {
@@ -18,6 +19,9 @@ export class FintocIntegration extends NextPayIntegration {
 
   static supportedCurrencies = [SupportedCurrencies.CLP] as const
   supportedCurrencies = FintocIntegration.supportedCurrencies
+
+  @Inject()
+  protected fintocService!: FintocService
 
   config!: FintocIntegrationConfig
 
@@ -46,15 +50,21 @@ export class FintocIntegration extends NextPayIntegration {
   ) {
     const secretKey = await this.getAccessToken(name)
 
-    const payment = await fintocService.createPayment({
+    const payment = await this.fintocService.createPayment({
       secretKey,
       amount: Number(amount),
       currency: 'CLP',
       orderId,
     })
 
+    const basePath = Container.get(BASE_PATH_TOKEN) ?? ''
     console.log({ payment })
-    return { id: orderId, link: orderId }
+    return {
+      id: orderId,
+      link: `${basePath}/integration/${this.getName()}/internal/widgets/${
+        payment.widget_token
+      }`,
+    }
   }
 
   async handleWebhookRequest(
@@ -127,6 +137,7 @@ export const createFintocIntegration = (
   class FintocIntegrationConfigured extends FintocIntegration {
     async onCreate() {
       this.config = config
+      this.fintocService.loggerService = this.logService
     }
   }
 

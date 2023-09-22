@@ -9,6 +9,7 @@ import { addIntegrationRoutesTrie } from './routes/integration-routes'
 import { Data, DataService } from './services/data.service'
 import { IntegrationConfig } from './services/integration-config.service'
 import { processRequest } from './processRequest'
+import { BASE_PATH_TOKEN } from 'constants/tokens'
 
 type ValueOf<
   ObjectType,
@@ -41,6 +42,9 @@ export class PayCore<Integrations extends IntegrationsObjectBase> {
 
     if (integrationConfig) {
       Container.set(IntegrationConfig, integrationConfig)
+    }
+    if (options.basePath) {
+      Container.set(BASE_PATH_TOKEN, options.basePath)
     }
 
     this.integrations = this.options.integrations ?? []
