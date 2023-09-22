@@ -9,19 +9,23 @@ export interface ILogger {
 
 @Service()
 export class Logger implements ILogger {
+  name = 'not_specified'
+  setName(name: string) {
+    this.name = name
+  }
   /**
    * Display in console
    */
-  log(name: string, ...messages: unknown[]) {
-    return console.log('\x1b[44m%s\x1b[0m', `${name}:`, ...messages)
+  log = (...messages: unknown[]) => {
+    return console.log('\x1b[44m%s\x1b[0m', `${this.name}:`, ...messages)
   }
-  error(name: string, ...messages: unknown[]) {
-    return console.error('\x1b[44m%s\x1b[0m', `${name}:`, ...messages)
+  error = (...messages: unknown[]) => {
+    return console.error('\x1b[44m%s\x1b[0m', `${this.name}:`, ...messages)
   }
-  warn(name: string, ...messages: unknown[]) {
-    return console.warn('\x1b[44m%s\x1b[0m', `${name}:`, ...messages)
+  warn = (...messages: unknown[]) => {
+    return console.warn('\x1b[44m%s\x1b[0m', `${this.name}:`, ...messages)
   }
-  info(name: string, ...messages: unknown[]) {
-    return console.info('\x1b[44m%s\x1b[0m', `${name}:`, ...messages)
+  info = (...messages: unknown[]) => {
+    return console.info('\x1b[44m%s\x1b[0m', `${this.name}:`, ...messages)
   }
 }
