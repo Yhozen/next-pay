@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@meanie/mongoose-to-json": "^2.6.0",
+    "fintoc-html": "*",
     "route-trie": "^3.0.0"
   },
   "openSource": true

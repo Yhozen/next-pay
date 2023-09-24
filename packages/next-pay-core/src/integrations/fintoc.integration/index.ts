@@ -13,6 +13,8 @@ import { FintocIntegrationConfig } from './config'
 import { FintocService } from './service'
 import { BASE_PATH_TOKEN } from 'constants/tokens'
 
+import fintocHtml from 'fintoc-html/dist/index.html'
+
 @Service()
 export class FintocIntegration extends NextPayIntegration {
   static integrationName = 'fintoc' as const
@@ -58,7 +60,7 @@ export class FintocIntegration extends NextPayIntegration {
     })
 
     const basePath = Container.get(BASE_PATH_TOKEN) ?? ''
-    console.log({ payment })
+    this.logService.log({ payment })
     return {
       id: orderId,
       link: `${basePath}/integration/${this.getName()}/internal/widgets/${
@@ -90,19 +92,11 @@ export class FintocIntegration extends NextPayIntegration {
             }
 
           const body = new Readable()
-          body.push(`<!DOCTYPE html>
-          <html lang="en">
-            <head>
-              <meta charset="UTF-8" />
-              <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <title>Document</title>
-            </head>
-            <body>
-              <p>example ${data.id}</p>
-            </body>
-          </html>
-          `)
+          body.push(
+            fintocHtml
+              .replace('PUBLIC_KEY', 'pk_test_bWEGdfyNNvzFzoQCLgL5ByYqAFUPLsW2')
+              .replace('WIDGET_TOKEN', data.id),
+          )
           body.push(null)
 
           return {
