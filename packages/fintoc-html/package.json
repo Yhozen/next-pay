@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "fintoc-html",
+  "version": "0.0.1",
+  "index": "dist/index.html",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "source": "src/index.html",
+  "scripts": {
+    "dev": "parcel"
+  },
+  "devDependencies": {
+    "eslint-config-drimo": "*",
+    "parcel": "latest"
+  },
+  "openSource": true
+}
