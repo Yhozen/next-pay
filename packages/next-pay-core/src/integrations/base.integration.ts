@@ -3,10 +3,11 @@ import { z } from 'zod'
 
 import type { SupportedCurrenciesType } from '../constants/supported-currencies'
 import { Data } from '../services/data.service'
-import { IntegrationConfig } from '../services/integration-config.service'
-import { Logger } from '../services/logger.service'
-import type { RequestInternal } from '../types/internal.types'
 import { NextPayOrderStatus } from '../types/pay-order-status.type'
+import { Logger } from '../services/logger.service'
+import { HTTPMethod, PayscriptHandler } from 'helpers/routing.helpers'
+import type { RequestInternal } from '../types/internal.types'
+import { IntegrationConfig } from '../services/integration-config.service'
 
 const nameSchema = z
   .string()
@@ -37,7 +38,7 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
   @Inject()
   private readonly dataService!: Data
   @Inject()
-  private readonly logService!: Logger
+  protected readonly logService!: Logger
   @Inject()
   private readonly integrationConfig!: IntegrationConfig
 
@@ -48,6 +49,7 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
     const instance = Container.get(this as Token<NextPayIntegration>)
 
     instance.name = this.integrationName
+    instance.logService.setName(instance.name)
 
     await instance.onCreate()
 
@@ -69,7 +71,7 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
    * Display in console
    */
   log(...args: unknown[]) {
-    this.logService.log(this.getName(), ...args)
+    this.logService.log(...args)
   }
 
   /**
@@ -162,6 +164,14 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
       default:
         return this.onPending(orderId, name)
     }
+  }
+
+  async getInternalRoutes(
+    name?: string,
+  ): Promise<
+    Record<string, { handler: PayscriptHandler; method: HTTPMethod }>
+  > {
+    return {}
   }
 
   /**

@@ -1,66 +1,67 @@
-"use client";
-import { sdk } from "@/helpers/next-pay.sdk";
-import { useAtom } from "jotai";
-import type { SupportedCurrencies } from "next-pay-sdk";
-import { useEffect, useState } from "react";
-import useSWR from "swr";
-import { serviceAtom } from "./serviceAtom";
-import { SelectProvider } from "./service-selector";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+'use client'
+import { useEffect, useState } from 'react'
+import { useAtom } from 'jotai'
+import type { SupportedCurrencies } from 'next-pay-sdk'
+import useSWR from 'swr'
 
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
+import { sdk } from '@/helpers/next-pay.sdk'
+
+import { SelectProvider } from './service-selector'
+import { serviceAtom } from './serviceAtom'
 
 export const CreatePayment = () => {
   const { data, error } = useSWR(
-    "supported_currencies",
-    sdk.getSupportedCurrencies
-  );
-  const [service] = useAtom(serviceAtom);
-  const [link, setLink] = useState<string>();
+    'supported_currencies',
+    sdk.getSupportedCurrencies,
+  )
+  const [service] = useAtom(serviceAtom)
+  const [link, setLink] = useState<string>()
 
   const [selectedCurrency, setSelectedCurrency] =
-    useState<SupportedCurrencies>();
+    useState<SupportedCurrencies>()
 
-  const [amount, setAmount] = useState(1000);
-  const isLoading = !data && !error;
+  const [amount, setAmount] = useState(1000)
+  const isLoading = !data && !error
 
   useEffect(() => {
-    if (!isLoading && data) setSelectedCurrency(data[0]);
+    if (!isLoading && data) setSelectedCurrency(data[0])
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading]);
+  }, [isLoading])
 
-  if (error) return <p>{JSON.stringify(error)}</p>;
+  if (error) return <p>{JSON.stringify(error)}</p>
 
   const onClick = async () => {
-    console.log({ service });
+    console.log({ service })
 
-    if (!selectedCurrency) return;
+    if (!selectedCurrency) return
 
     const data = await sdk.requestPaymentLink({
-      service: service as "mercadopago",
-      selectedCurrency: selectedCurrency as "CLP",
+      service: service as 'mercadopago',
+      selectedCurrency: selectedCurrency as 'CLP',
       amount,
       referenceId: (Math.random() + 1).toString(36).substring(2),
-    });
+    })
 
-    console.log(data);
-    setLink(data.link);
-  };
+    console.log(data)
+    setLink(data.link)
+  }
 
   return (
-    <div style={{ width: "400px" }}>
+    <div style={{ width: '400px' }}>
       {!data ? (
         <p>loading...</p>
       ) : (
         <Select
-          onValueChange={(value) =>
+          onValueChange={value =>
             setSelectedCurrency(value as SupportedCurrencies)
           }
         >
@@ -68,7 +69,7 @@ export const CreatePayment = () => {
             <SelectValue placeholder="Currency" />
           </SelectTrigger>
           <SelectContent>
-            {data.map((currency) => (
+            {data.map(currency => (
               <SelectItem value={currency} key={currency}>
                 {currency}
               </SelectItem>
@@ -80,7 +81,7 @@ export const CreatePayment = () => {
       <Input
         type="number"
         value={amount}
-        onChange={(e) => setAmount(Number(e.target.value))}
+        onChange={e => setAmount(Number(e.target.value))}
       />
       <Button onClick={onClick}>Pay 🤑</Button>
       {link && (
@@ -89,5 +90,5 @@ export const CreatePayment = () => {
         </a>
       )}
     </div>
-  );
-};
+  )
+}

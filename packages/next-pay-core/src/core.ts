@@ -9,6 +9,7 @@ import { addIntegrationRoutesTrie } from './routes/integration-routes'
 import { Data, DataService } from './services/data.service'
 import { IntegrationConfig } from './services/integration-config.service'
 import { processRequest } from './processRequest'
+import { BASE_PATH_TOKEN } from 'constants/tokens'
 
 type ValueOf<
   ObjectType,
@@ -42,6 +43,9 @@ export class PayCore<Integrations extends IntegrationsObjectBase> {
     if (integrationConfig) {
       Container.set(IntegrationConfig, integrationConfig)
     }
+    if (options.basePath) {
+      Container.set(BASE_PATH_TOKEN, options.basePath)
+    }
 
     this.integrations = this.options.integrations ?? []
     this.initialized = this.initIntegrations()
@@ -62,7 +66,7 @@ export class PayCore<Integrations extends IntegrationsObjectBase> {
     const promises = this.integrations.map(async integration => {
       const integrationInstance = await integration.create()
 
-      this.addIntegration(integrationInstance)
+      await this.addIntegration(integrationInstance)
 
       integrationInstance.supportedCurrencies.forEach(currency =>
         this.addSupportedCurrencyByIntegration(
@@ -80,7 +84,7 @@ export class PayCore<Integrations extends IntegrationsObjectBase> {
     this.printSupportedCurrencies()
   }
 
-  private addIntegration(integration: NextPayIntegration) {
+  private async addIntegration(integration: NextPayIntegration) {
     integration.log('Integrating...')
 
     return addIntegrationRoutesTrie(this.trie, integration)

@@ -11,6 +11,7 @@
   "dependencies": {
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@t3-oss/env-nextjs": "^0.6.1",
     "@typegoose/typegoose": "^11.4.1",
     "@types/node": "20.5.1",
     "@types/react": "18.2.20",
@@ -37,5 +38,6 @@
     "typedi": "^0.10.0",
     "typescript": "5.1.6",
     "zod": "3.21.4"
-  }
+  },
+  "openSource": true
 }
