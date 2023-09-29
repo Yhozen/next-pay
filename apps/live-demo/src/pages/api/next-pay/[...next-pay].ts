@@ -6,13 +6,16 @@ import {
 } from 'next-pay'
 import {
   connectMongo,
+  createFintocIntegration,
   createMercadoPagoIntegration,
   mongoAdapter,
 } from 'next-pay-core'
 
+import { env } from '@/env/server'
+
 const MercadoPagoIntegration = createMercadoPagoIntegration({
   async accessToken(): Promise<string> {
-    return 'YOUR_MERCADOPAGO_ACCESS_TOKEN'
+    return env.MP_ACCESS_TOKEN
   },
   back_urls: id => ({
     success: `${process.env.NEXTAUTH_URL}/someroute/${id}/successful`,
@@ -21,7 +24,15 @@ const MercadoPagoIntegration = createMercadoPagoIntegration({
   }),
 })
 
-const integrations = createIntegrations().add(MercadoPagoIntegration).compile()
+const FintocIntegration = createFintocIntegration({
+  accessToken: env.FINTOC_ACCESS_TOKEN,
+  fintocLink: env.FINTOC_LINK_TOKEN,
+})
+
+const integrations = createIntegrations()
+  .add(MercadoPagoIntegration)
+  .add(FintocIntegration)
+  .compile()
 
 const nextPayConfig = defineNextPayConfig({
   integrations,
@@ -53,7 +64,7 @@ const nextPayConfig = defineNextPayConfig({
   },
 })
 
-export type IntegrationObject = InferIntegrationType<typeof nextPayConfig>;
+export type IntegrationObject = InferIntegrationType<typeof nextPayConfig>
 
 const { handler } = NextPay.create(nextPayConfig)
 
