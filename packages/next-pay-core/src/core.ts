@@ -6,7 +6,7 @@ import { PayscriptTrie } from './helpers/routing.helpers'
 import { NextPayIntegration } from './integrations/base.integration'
 import { addGeneralRoutesTrie } from './routes/general-routes'
 import { addIntegrationRoutesTrie } from './routes/integration-routes'
-import { Data, DataService } from './services/data.service'
+import { Data, DataService } from 'next-pay-data-service'
 import { IntegrationConfig } from './services/integration-config.service'
 import { processRequest } from './processRequest'
 

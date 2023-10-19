@@ -1,13 +1,13 @@
 import Container, { Inject, Service, Token } from 'typedi'
 import { z } from 'zod'
 
+import { Data } from 'next-pay-data-service'
 import type { SupportedCurrenciesType } from '../constants/supported-currencies'
-import { Data } from '../services/data.service'
+import type { HTTPMethod, PayscriptHandler } from 'helpers/routing.helpers'
+import { IntegrationConfig } from '../services/integration-config.service'
+import type { RequestInternal } from '../types/internal.types'
 import { NextPayOrderStatus } from '../types/pay-order-status.type'
 import { Logger } from '../services/logger.service'
-import { HTTPMethod, PayscriptHandler } from 'helpers/routing.helpers'
-import type { RequestInternal } from '../types/internal.types'
-import { IntegrationConfig } from '../services/integration-config.service'
 
 const nameSchema = z
   .string()
@@ -135,11 +135,9 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
       )
 
       await this.dataService.updateOrder(
-        { _id: docId },
+        { id: docId },
         {
-          $set: {
-            externalId: payment.id,
-          },
+          externalId: payment.id,
         },
         session,
       )
@@ -180,11 +178,9 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
   protected async onApproved(id: string, clientName?: string) {
     this.log('calling registered APPROVED webhooks')
     await this.dataService.updateOrder(
-      { _id: id },
+      { id },
       {
-        $set: {
-          status: NextPayOrderStatus.APPROVED,
-        },
+        status: NextPayOrderStatus.APPROVED,
       },
     )
     try {
@@ -206,11 +202,9 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
   protected async onRejected(id: string, clientName?: string) {
     this.log('calling registered REJECTED webhooks')
     await this.dataService.updateOrder(
-      { _id: id },
+      { id },
       {
-        $set: {
-          status: NextPayOrderStatus.REJECTED,
-        },
+        status: NextPayOrderStatus.REJECTED,
       },
     )
     try {

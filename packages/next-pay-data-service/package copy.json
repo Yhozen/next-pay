@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "next-pay-core",
+  "name": "next-pay-data-service",
   "version": "0.0.1",
   "index": "dist/index.js",
   "main": "dist/index.js",
@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "@meanie/mongoose-to-json": "^2.6.0",
-    "next-pay-data-service": "*",
     "route-trie": "^3.0.0"
   },
   "openSource": true

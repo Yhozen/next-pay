@@ -1,14 +1,13 @@
+import { prismaAdapter } from 'adapter-prisma'
 import {
   createIntegrations,
   defineNextPayConfig,
   InferIntegrationType,
   NextPay,
 } from 'next-pay'
-import {
-  connectMongo,
-  createMercadoPagoIntegration,
-  mongoAdapter,
-} from 'next-pay-core'
+import { createMercadoPagoIntegration } from 'next-pay-core'
+
+import { prisma } from '../../../db/client'
 
 const MercadoPagoIntegration = createMercadoPagoIntegration({
   async accessToken(): Promise<string> {
@@ -26,7 +25,7 @@ const integrations = createIntegrations().add(MercadoPagoIntegration).compile()
 const nextPayConfig = defineNextPayConfig({
   integrations,
   name: 'live-demo',
-  adapter: mongoAdapter({ connection: connectMongo }),
+  adapter: prismaAdapter(prisma),
   integrationConfig: {
     async onApproved(integrationName, order) {
       const invoiceId = order?.referenceId
@@ -53,7 +52,7 @@ const nextPayConfig = defineNextPayConfig({
   },
 })
 
-export type IntegrationObject = InferIntegrationType<typeof nextPayConfig>;
+export type IntegrationObject = InferIntegrationType<typeof nextPayConfig>
 
 const { handler } = NextPay.create(nextPayConfig)
 
