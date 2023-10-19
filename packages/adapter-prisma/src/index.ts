@@ -53,7 +53,7 @@ export const prismaAdapter = (p: PrismaClient): DataService => {
           currency,
           clientName,
           referenceId,
-          amount,
+          amount: String(amount),
         },
       })
 
