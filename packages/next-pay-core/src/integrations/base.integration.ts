@@ -1,12 +1,13 @@
 import Container, { Inject, Service, Token } from 'typedi'
 import { z } from 'zod'
 
-import type { SupportedCurrenciesType } from '../constants/supported-currencies'
 import { Data } from 'next-pay-data-service'
+import type { SupportedCurrenciesType } from '../constants/supported-currencies'
+import type { HTTPMethod, PayscriptHandler } from 'helpers/routing.helpers'
 import { IntegrationConfig } from '../services/integration-config.service'
-import { Logger } from '../services/logger.service'
 import type { RequestInternal } from '../types/internal.types'
 import { NextPayOrderStatus } from '../types/pay-order-status.type'
+import { Logger } from '../services/logger.service'
 
 const nameSchema = z
   .string()
@@ -160,6 +161,14 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
       default:
         return this.onPending(orderId, name)
     }
+  }
+
+  async getInternalRoutes(
+    name?: string,
+  ): Promise<
+    Record<string, { handler: PayscriptHandler; method: HTTPMethod }>
+  > {
+    return {}
   }
 
   /**

@@ -42,5 +42,6 @@
   },
   "devDependencies": {
     "prisma": "5.4.2"
-  }
+  },
+  "openSource": true
 }

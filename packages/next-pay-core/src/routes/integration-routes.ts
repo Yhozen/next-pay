@@ -15,12 +15,14 @@ const requestBody = z.object({
   referenceId: z.string(),
 })
 
-export const addIntegrationRoutesTrie = (
+export const addIntegrationRoutesTrie = async (
   trie: PayscriptTrie,
   integration: NextPayIntegration,
 ) => {
+  const integrationName = integration.getName()
+  const internalRoutesPromise = integration.getInternalRoutes()
   trie
-    .define(`/integration/${integration.getName()}/create_request`)
+    .define(`/integration/${integrationName}/create_request`)
     .handle(HTTPMethod.POST, async ctx => {
       console.log(ctx.params)
       const { success, data, error } = validateSchema(requestBody, ctx.req.body)
@@ -30,7 +32,6 @@ export const addIntegrationRoutesTrie = (
       const body = data
 
       const { amount, currency, name, referenceId } = body
-      console.log({ name })
 
       const order = await integration.createOrder(
         amount as string,
@@ -64,5 +65,16 @@ export const addIntegrationRoutesTrie = (
         }
       }
     })
+
+  const internalRoutes = await internalRoutesPromise
+  for (const internalRoutePath in internalRoutes) {
+    const routeConfig = internalRoutes[internalRoutePath]
+    if (!routeConfig) continue
+
+    const { handler, method } = routeConfig
+    trie
+      .define(`/integration/${integrationName}/internal/${internalRoutePath}`)
+      .handle(method, handler)
+  }
   integration.log('did integrate')
 }

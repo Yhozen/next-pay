@@ -1,4 +1,4 @@
-type GetValueByName<T = string> = (name?: string) => T | Promise<T>
+import type { GetValueByName } from 'helpers/integration.helpers'
 
 type BackUrls = {
   /** return URL in case of successful payment  */
