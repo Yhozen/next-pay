@@ -2,7 +2,7 @@ import Container, { Inject, Service, Token } from 'typedi'
 import { z } from 'zod'
 
 import type { SupportedCurrenciesType } from '../constants/supported-currencies'
-import { Data } from '../services/data.service'
+import { Data } from 'next-pay-data-service'
 import { IntegrationConfig } from '../services/integration-config.service'
 import { Logger } from '../services/logger.service'
 import type { RequestInternal } from '../types/internal.types'

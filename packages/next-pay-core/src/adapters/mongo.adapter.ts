@@ -6,14 +6,14 @@ import { ClientSession, withTransaction } from '../db/withTransaction'
 import { PreMethodsHook } from '../decorators/pre-methods-hook.decorator'
 import { getValueFrom } from '../helpers/integration.helpers'
 import { OrderModel } from '../models/order.model'
-
+import { test } from 'next-pay-data-service'
 import {
   CreateOrderParams,
   Data,
   DataService,
   Order,
   WithTransactionCallback,
-} from '../services/data.service'
+} from 'next-pay-data-service'
 
 export const connectMongo = dbConnect
 
@@ -26,6 +26,7 @@ type MongoAdapterConfig = {
 export const mongoAdapter = (config: MongoAdapterConfig): DataService => {
   const connection = getValueFrom(config.connection, [])
 
+  console.log({ test })
   async function preDataService() {
     await connection
   }
