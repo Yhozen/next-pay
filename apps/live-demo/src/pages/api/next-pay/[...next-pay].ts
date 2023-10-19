@@ -5,13 +5,18 @@ import {
   InferIntegrationType,
   NextPay,
 } from 'next-pay'
-import { createMercadoPagoIntegration } from 'next-pay-core'
+import {
+  createFintocIntegration,
+  createMercadoPagoIntegration,
+} from 'next-pay-core'
+
+import { env } from '@/env/server'
 
 import { prisma } from '../../../db/client'
 
 const MercadoPagoIntegration = createMercadoPagoIntegration({
   async accessToken(): Promise<string> {
-    return 'YOUR_MERCADOPAGO_ACCESS_TOKEN'
+    return env.MP_ACCESS_TOKEN
   },
   back_urls: id => ({
     success: `${process.env.NEXTAUTH_URL}/someroute/${id}/successful`,
@@ -20,7 +25,15 @@ const MercadoPagoIntegration = createMercadoPagoIntegration({
   }),
 })
 
-const integrations = createIntegrations().add(MercadoPagoIntegration).compile()
+const FintocIntegration = createFintocIntegration({
+  accessToken: env.FINTOC_ACCESS_TOKEN,
+  fintocLink: env.FINTOC_LINK_TOKEN,
+})
+
+const integrations = createIntegrations()
+  .add(MercadoPagoIntegration)
+  .add(FintocIntegration)
+  .compile()
 
 const nextPayConfig = defineNextPayConfig({
   integrations,

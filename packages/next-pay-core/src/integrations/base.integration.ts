@@ -38,7 +38,7 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
   @Inject()
   private readonly dataService!: Data
   @Inject()
-  private readonly logService!: Logger
+  protected readonly logService!: Logger
   @Inject()
   private readonly integrationConfig!: IntegrationConfig
 
@@ -49,6 +49,7 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
     const instance = Container.get(this as Token<NextPayIntegration>)
 
     instance.name = this.integrationName
+    instance.logService.setName(instance.name)
 
     await instance.onCreate()
 
@@ -70,7 +71,7 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
    * Display in console
    */
   log(...args: unknown[]) {
-    this.logService.log(this.getName(), ...args)
+    this.logService.log(...args)
   }
 
   /**

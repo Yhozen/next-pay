@@ -1,7 +1,7 @@
 import { HTTPMethod, PayscriptHandler } from 'helpers/routing.helpers'
 import { validateSchema } from 'helpers/validation.helpers'
 import { Readable } from 'stream'
-import { Service } from 'typedi'
+import Container, { Inject, Service } from 'typedi'
 import { z } from 'zod'
 
 import { SupportedCurrencies } from '../../constants/supported-currencies'
@@ -10,7 +10,10 @@ import { NextPayOrderStatus } from '../../types/pay-order-status.type'
 import { NextPayIntegration } from '../base.integration'
 
 import { FintocIntegrationConfig } from './config'
-import * as fintocService from './service'
+import { FintocService } from './service'
+import { BASE_PATH_TOKEN } from 'constants/tokens'
+
+import fintocHtml from 'fintoc-html/src/index.html'
 
 @Service()
 export class FintocIntegration extends NextPayIntegration {
@@ -18,6 +21,9 @@ export class FintocIntegration extends NextPayIntegration {
 
   static supportedCurrencies = [SupportedCurrencies.CLP] as const
   supportedCurrencies = FintocIntegration.supportedCurrencies
+
+  @Inject()
+  protected fintocService!: FintocService
 
   config!: FintocIntegrationConfig
 
@@ -46,15 +52,21 @@ export class FintocIntegration extends NextPayIntegration {
   ) {
     const secretKey = await this.getAccessToken(name)
 
-    const payment = await fintocService.createPayment({
+    const payment = await this.fintocService.createPayment({
       secretKey,
       amount: Number(amount),
       currency: 'CLP',
       orderId,
     })
 
-    console.log({ payment })
-    return { id: orderId, link: orderId }
+    const basePath = Container.get(BASE_PATH_TOKEN) ?? ''
+    this.logService.log({ payment })
+    return {
+      id: orderId,
+      link: `${basePath}/integration/${this.getName()}/internal/widgets/${
+        payment.widget_token
+      }`,
+    }
   }
 
   async handleWebhookRequest(
@@ -80,19 +92,11 @@ export class FintocIntegration extends NextPayIntegration {
             }
 
           const body = new Readable()
-          body.push(`<!DOCTYPE html>
-          <html lang="en">
-            <head>
-              <meta charset="UTF-8" />
-              <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <title>Document</title>
-            </head>
-            <body>
-              <p>example ${data.id}</p>
-            </body>
-          </html>
-          `)
+          body.push(
+            fintocHtml
+              .replace('PUBLIC_KEY', 'pk_test_bWEGdfyNNvzFzoQCLgL5ByYqAFUPLsW2')
+              .replace('WIDGET_TOKEN', data.id),
+          )
           body.push(null)
 
           return {
@@ -127,6 +131,7 @@ export const createFintocIntegration = (
   class FintocIntegrationConfigured extends FintocIntegration {
     async onCreate() {
       this.config = config
+      this.fintocService.loggerService = this.logService
     }
   }
 
