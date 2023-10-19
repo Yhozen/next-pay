@@ -134,11 +134,9 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
       )
 
       await this.dataService.updateOrder(
-        { _id: docId },
+        { id: docId },
         {
-          $set: {
-            externalId: payment.id,
-          },
+          externalId: payment.id,
         },
         session,
       )
@@ -171,11 +169,9 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
   protected async onApproved(id: string, clientName?: string) {
     this.log('calling registered APPROVED webhooks')
     await this.dataService.updateOrder(
-      { _id: id },
+      { id },
       {
-        $set: {
-          status: NextPayOrderStatus.APPROVED,
-        },
+        status: NextPayOrderStatus.APPROVED,
       },
     )
     try {
@@ -197,11 +193,9 @@ export abstract class NextPayIntegration extends NextPayIntegrationBase {
   protected async onRejected(id: string, clientName?: string) {
     this.log('calling registered REJECTED webhooks')
     await this.dataService.updateOrder(
-      { _id: id },
+      { id },
       {
-        $set: {
-          status: NextPayOrderStatus.REJECTED,
-        },
+        status: NextPayOrderStatus.REJECTED,
       },
     )
     try {

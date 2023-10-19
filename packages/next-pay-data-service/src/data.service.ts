@@ -1,4 +1,3 @@
-import { FilterQuery, UpdateQuery } from 'mongoose'
 import Container, { Service, Token } from 'typedi'
 
 import { SupportedCurrenciesType } from './supported-currencies'
@@ -49,8 +48,8 @@ export abstract class Data<CTX = PlaceholderCTX> {
   }
 
   async updateOrder(
-    find: FilterQuery<Order>,
-    update: UpdateQuery<Order>,
+    find: Partial<Order>,
+    update: Partial<Order>,
     ctx?: CTX,
   ): Promise<Order> {
     throw new Error('you must implement createOrder')

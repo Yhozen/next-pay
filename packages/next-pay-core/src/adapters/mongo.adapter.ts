@@ -1,4 +1,4 @@
-import type { Connection, FilterQuery, UpdateQuery } from 'mongoose'
+import type { Connection } from 'mongoose'
 import { Service } from 'typedi'
 
 import dbConnect from '../db/mongo'
@@ -6,7 +6,6 @@ import { ClientSession, withTransaction } from '../db/withTransaction'
 import { PreMethodsHook } from '../decorators/pre-methods-hook.decorator'
 import { getValueFrom } from '../helpers/integration.helpers'
 import { OrderModel } from '../models/order.model'
-import { test } from 'next-pay-data-service'
 import {
   CreateOrderParams,
   Data,
@@ -26,7 +25,6 @@ type MongoAdapterConfig = {
 export const mongoAdapter = (config: MongoAdapterConfig): DataService => {
   const connection = getValueFrom(config.connection, [])
 
-  console.log({ test })
   async function preDataService() {
     await connection
   }
@@ -75,13 +73,17 @@ export const mongoAdapter = (config: MongoAdapterConfig): DataService => {
     }
 
     async updateOrder(
-      find: FilterQuery<Order>,
-      update: UpdateQuery<Order>,
+      find: Partial<Order>,
+      update: Partial<Order>,
       session?: ClientSession,
     ) {
-      const order = await OrderModel.findOneAndUpdate(find, update, {
-        session,
-      }).lean()
+      const order = await OrderModel.findOneAndUpdate(
+        find,
+        { $set: update },
+        {
+          session,
+        },
+      ).lean()
 
       if (!order) throw new Error("couldn't update order")
       return order
