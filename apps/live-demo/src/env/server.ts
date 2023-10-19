@@ -6,6 +6,7 @@ export const env = createEnv({
     MP_ACCESS_TOKEN: z.string(),
     FINTOC_ACCESS_TOKEN: z.string(),
     FINTOC_LINK_TOKEN: z.string().min(1),
+    DATABASE_URL: z.string().url(),
   },
   experimental__runtimeEnv: {},
 })
