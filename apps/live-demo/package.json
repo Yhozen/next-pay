@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postinstall": "prisma generate",
+    "db:studio": "prisma studio",
     "start": "next start",
     "lint": "next lint"
   },
