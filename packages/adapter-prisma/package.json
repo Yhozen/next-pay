@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@meanie/mongoose-to-json": "^2.6.0",
+    "next-pay-data-service": "*",
     "route-trie": "^3.0.0"
   },
   "openSource": true
