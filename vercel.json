@@ -1,0 +1,6 @@
+{
+  "env": {
+    "ENABLE_ROOT_PATH_BUILD_CACHE": "1",
+    "YARN_CACHE_FOLDER": ".next/cache/yarn-cache"
+  }
+}
